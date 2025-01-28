@@ -1,4 +1,5 @@
 import pygame
+import string
 from pygame.locals import *
 import random
 
@@ -6,7 +7,8 @@ pygame.init()
 
 fenetre = pygame.display.set_mode((846, 476))
 fond = pygame.image.load("dojo.jpg").convert()#846x476 px
-lettre = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+#lettre = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+lettre = string.ascii_lowercase + string.punctuation
 fruit= ['abricot', 'banane', 'orange', 'pasteque', 'poire', 'bombe', 'glacon']
 clock = pygame.time.Clock() #préréglage FPS
 #bombe = pygame.image.load("bombe.png").convert_alpha() #626x626 px
@@ -150,5 +152,5 @@ while continuer :
             generate_random_fruit(key)
 
     pygame.display.update()#mise a jour de l'image a chaque fin de boucle
-    clock.tick(12)
+    clock.tick(20)
 pygame.quit()
