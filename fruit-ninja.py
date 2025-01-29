@@ -158,5 +158,5 @@ while continuer :
             generate_random_fruit(key)
 
     pygame.display.update()#mise a jour de l'image a chaque fin de boucle
-    clock.tick(13)
+    clock.tick(10)
 pygame.quit()
