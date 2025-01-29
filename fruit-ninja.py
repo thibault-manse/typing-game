@@ -66,7 +66,7 @@ def draw_lives(fenetre, x, y, lives, image):
     for i in range(lives):
         img = pygame.image.load(image)
         img_rect = img.get_rect()
-        img_rect.x = int(x + 35 * i)
+        img_rect.x = int(x + 100 * i)
         img_rect.y = y
         fenetre.blit(img, img_rect)
 
@@ -100,7 +100,7 @@ while continuer :
             first_round = False
         game_over = False
         vie = 3
-        draw_lives(fenetre, 690, 5, vie, 'fruit/vie.png')
+        draw_lives(fenetre, 400, 5, vie, 'fruit/vie.png')
         point = 0
 
     for event in pygame.event.get():
@@ -109,7 +109,7 @@ while continuer :
     
     fenetre.blit(fond, (0, 0))
     fenetre.blit(score_text, (0, 0))
-    draw_lives(fenetre, 690, 5, vie, 'fruit/vie.png')
+    draw_lives(fenetre, 520, 5, vie, 'fruit/vie.png')
 
     for key, value in data.items():
         if value['throw']:
