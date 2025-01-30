@@ -18,6 +18,7 @@ data = {} #création bibliotheque
 fenetre.blit(fond, (0, 0))#Fond de la fenetre
 
 WHITE = (255,255,255)
+BLACK = (0, 0, 0)
 font = pygame.font.SysFont("arialblack", 32) #Police et taille
 score_text = font.render('Score : ' + str(point), True, (255, 255, 255))#Affichage des points
 
@@ -70,7 +71,7 @@ def show_gameover_screen():
     if not game_over:
         draw_text(fenetre, "Score : " + str(point), 40, 800 / 2, 250)
 
-        draw_text(fenetre, "Press a key to begin or return for quit", 24, 800 / 2, 500 * 3 / 4)
+        draw_text(fenetre, "Press a key to begin or espace for quit", 24, 800 / 2, 500 * 3 / 4)
         pygame.display.flip()
         waiting = True
         while waiting:
@@ -90,58 +91,63 @@ def show_gameover_screen():
 first_round = True
 game_over = True
 continuer = True
+menu = 0
 
 while continuer :
-    if game_over :
-        if first_round :
-            show_gameover_screen()
-            first_round = False
-            if exit == 1:
-                pygame.quit()
-        game_over = False
-        life = 3
-        data.clear()  # Réinitialise les fruits
-        for fruits in fruit:  # Regénère de nouveaux fruits
-            generate_random_fruit(fruits)
-        draw_lives(fenetre, 400, 5, life, 'fruit/vie.png')
-        point = 0
+    if menu == 0:
+        draw_text(fenetre, "FRUIT NINJA", 64, 800 / 2, 500 / 4)
+        draw_text(fenetre, "Press a key to begin or escape for quit", 24, 800 / 2, 500 * 3 / 4)
+        pygame.display.flip()
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    continuer = False
+                    waiting = False
+                if event.type == pygame.KEYUP:
+                    waiting = False
+                    menu = 1
+                if event.type == KEYUP:
+                    if event.key == K_ESCAPE:
+                        continuer = False
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            continuer = False
-    
-    fenetre.blit(fond, (0, 0))
-    fenetre.blit(score_text, (0, 0))
-    draw_lives(fenetre, 520, 5, life, 'fruit/vie.png')
+    else :
+        if game_over :
+            if first_round :
+                show_gameover_screen()
+                first_round = False
+                if exit == 1:
+                    pygame.quit()
+            game_over = False
+            life = 3
+            data.clear()  # Réinitialise les fruits
+            for fruits in fruit:  # Regénère de nouveaux fruits
+                generate_random_fruit(fruits)
+            draw_lives(fenetre, 400, 5, life, 'fruit/vie.png')
+            point = 0
 
-    for key, value in data.items():
-        if value['throw']:
-            value['x'] += value['speed_x']
-            value['y'] += value['speed_y']
-            value['speed_y'] += (1 * value['t'])
-            value['t'] += 1
-            letter = value['letter']
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                continuer = False
+        
+        fenetre.blit(fond, (0, 0))
+        fenetre.blit(score_text, (0, 0))
+        draw_lives(fenetre, 520, 5, life, 'fruit/vie.png')
 
-            if value['y'] <= 476:
-                fenetre.blit(value['img'], (value['x'], value['y']))
-                draw_text(fenetre, letter, 30, value['x'], value['y'])
-            else :
-                if value['y'] >= 476 and not value['hit'] and key != 'bombe':
-                    life -= 1
-                    if life <= 0:
-                        exit = show_gameover_screen()
-                        game_over = True
-                        point = 0
-                        if exit == 1:
-                            pygame.quit()
-                        score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
-                generate_random_fruit(key)
+        for key, value in data.items():
+            if value['throw']:
+                value['x'] += value['speed_x']
+                value['y'] += value['speed_y']
+                value['speed_y'] += (1 * value['t'])
+                value['t'] += 1
+                letter = value['letter']
 
-            if event.type == KEYUP:
-                tap_letter = event.unicode.lower()
-                if not value['hit'] and tap_letter == value['letter']:
-                    if key == 'bombe':
-                        life -= 3
+                if value['y'] <= 476:
+                    fenetre.blit(value['img'], (value['x'], value['y']))
+                    draw_text(fenetre, letter, 30, value['x'], value['y'])
+                else :
+                    if value['y'] >= 476 and not value['hit'] and key != 'bombe':
+                        life -= 1
                         if life <= 0:
                             exit = show_gameover_screen()
                             game_over = True
@@ -149,20 +155,34 @@ while continuer :
                             if exit == 1:
                                 pygame.quit()
                             score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
-                        half_fruit_path = "fruit/explosion.png"
-                    else:
-                        half_fruit_path = "fruit/explosion.png"
-                
-                        value['img'] = pygame.image.load(half_fruit_path)
-                    value['speed_x'] += 15
+                    generate_random_fruit(key)
 
-                    if key != 'bombe' :
-                        point += 1
-                    score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
-                    value['hit'] = True
+                if event.type == KEYUP:
+                    tap_letter = event.unicode.lower()
+                    if not value['hit'] and tap_letter == value['letter']:
+                        if key == 'bombe':
+                            life -= 3
+                            if life <= 0:
+                                exit = show_gameover_screen()
+                                game_over = True
+                                point = 0
+                                if exit == 1:
+                                    pygame.quit()
+                                score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
+                            half_fruit_path = "fruit/explosion.png"
+                        else:
+                            half_fruit_path = "fruit/explosion.png"
+                    
+                            value['img'] = pygame.image.load(half_fruit_path)
+                        value['speed_x'] += 15
 
-        else : 
-            generate_random_fruit(key)
+                        if key != 'bombe' :
+                            point += 1
+                        score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
+                        value['hit'] = True
+
+            else : 
+                generate_random_fruit(key)
 
     pygame.display.flip()#mise a jour de l'image a chaque fin de boucle
     clock.tick(11)
