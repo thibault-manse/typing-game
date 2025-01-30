@@ -38,16 +38,12 @@ def generate_random_fruit(fruit):
         'throw' : False,
         't' : 0,
         'hit' : False,
-        'miss' : False,
     }
 
     if random.random() >= 0.979:
         data[fruit]['throw'] = True
     else :
         data[fruit]['throw'] = False
-
-    if data[fruit]['y'] == 476:
-        data[fruit]['miss'] = True
 
 for fruits in fruit: #genere un fruit random
     generate_random_fruit(fruits)
@@ -131,25 +127,18 @@ while continuer :
                 fenetre.blit(value['img'], (value['x'], value['y']))
                 draw_text(fenetre, letter, 30, value['x'], value['y'])
             else :
+                if value['y'] >= 476 and not value['hit'] and key != 'bombe':
+                    vie -= 1
+                    if vie <= 0:
+                        exit = show_gameover_screen()
+                        game_over = True
+                        if exit == 1:
+                            pygame.quit()
                 generate_random_fruit(key)
 
             if event.type == KEYUP:
                 tap_letter = event.unicode.lower()
                 if not value['hit'] and tap_letter == value['letter']:
-                    if value['miss'] == True:
-                        vie -= 1
-                        if vie <= 0:
-                            hide_cross_lives(fenetre, 690, 15)
-                        elif vie == 1:
-                            hide_cross_lives(fenetre, 725, 15)
-                        elif vie == 2:
-                            hide_cross_lives(fenetre, 760, 15)
-
-                        if vie <= 0:
-                            exit = show_gameover_screen()
-                            game_over = True
-                            if exit == 1:
-                                pygame.quit()
                     if key == 'bombe':
                         vie -= 3
                         if vie <= 0:
