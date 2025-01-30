@@ -18,10 +18,6 @@ data = {} #création bibliotheque
 fenetre.blit(fond, (0, 0))#Fond de la fenetre
 
 WHITE = (255,255,255)
-BLACK = (0,0,0)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
 font = pygame.font.SysFont("arialblack", 32) #Police et taille
 score_text = font.render('Score : ' + str(point), True, (255, 255, 255))#Affichage des points
 
@@ -104,6 +100,9 @@ while continuer :
                 pygame.quit()
         game_over = False
         vie = 3
+        data.clear()  # Réinitialise les fruits
+        for fruits in fruit:  # Regénère de nouveaux fruits
+            generate_random_fruit(fruits)
         draw_lives(fenetre, 400, 5, vie, 'fruit/vie.png')
         point = 0
 
@@ -132,8 +131,10 @@ while continuer :
                     if vie <= 0:
                         exit = show_gameover_screen()
                         game_over = True
+                        point = 0
                         if exit == 1:
                             pygame.quit()
+                        score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
                 generate_random_fruit(key)
 
             if event.type == KEYUP:
@@ -151,9 +152,10 @@ while continuer :
                         if vie <= 0:
                             exit = show_gameover_screen()
                             game_over = True
+                            point = 0
                             if exit == 1:
                                 pygame.quit()
-                        #inclure explosion fruit/bombe/glace ici
+                            score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
                         half_fruit_path = "fruit/explosion.png"
                     else:
                         half_fruit_path = "fruit/explosion.png"
@@ -169,6 +171,6 @@ while continuer :
         else : 
             generate_random_fruit(key)
 
-    pygame.display.update()#mise a jour de l'image a chaque fin de boucle
+    pygame.display.flip()#mise a jour de l'image a chaque fin de boucle
     clock.tick(11)
 pygame.quit()
