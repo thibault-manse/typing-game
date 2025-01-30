@@ -13,7 +13,7 @@ fruit= ['abricot', 'banane', 'orange', 'pasteque', 'poire', 'bombe', 'glacon']
 clock = pygame.time.Clock() #préréglage FPS
 point = 0
 multiplicateur = 1
-vie = 3
+life = 3
 data = {} #création bibliotheque
 fenetre.blit(fond, (0, 0))#Fond de la fenetre
 
@@ -99,11 +99,11 @@ while continuer :
             if exit == 1:
                 pygame.quit()
         game_over = False
-        vie = 3
+        life = 3
         data.clear()  # Réinitialise les fruits
         for fruits in fruit:  # Regénère de nouveaux fruits
             generate_random_fruit(fruits)
-        draw_lives(fenetre, 400, 5, vie, 'fruit/vie.png')
+        draw_lives(fenetre, 400, 5, life, 'fruit/vie.png')
         point = 0
 
     for event in pygame.event.get():
@@ -112,7 +112,7 @@ while continuer :
     
     fenetre.blit(fond, (0, 0))
     fenetre.blit(score_text, (0, 0))
-    draw_lives(fenetre, 520, 5, vie, 'fruit/vie.png')
+    draw_lives(fenetre, 520, 5, life, 'fruit/vie.png')
 
     for key, value in data.items():
         if value['throw']:
@@ -127,8 +127,8 @@ while continuer :
                 draw_text(fenetre, letter, 30, value['x'], value['y'])
             else :
                 if value['y'] >= 476 and not value['hit'] and key != 'bombe':
-                    vie -= 1
-                    if vie <= 0:
+                    life -= 1
+                    if life <= 0:
                         exit = show_gameover_screen()
                         game_over = True
                         point = 0
@@ -141,15 +141,8 @@ while continuer :
                 tap_letter = event.unicode.lower()
                 if not value['hit'] and tap_letter == value['letter']:
                     if key == 'bombe':
-                        vie -= 3
-                        if vie <= 0:
-                            hide_cross_lives(fenetre, 690, 15)
-                        elif vie == 1:
-                            hide_cross_lives(fenetre, 725, 15)
-                        elif vie == 2:
-                            hide_cross_lives(fenetre, 760, 15)
-
-                        if vie <= 0:
+                        life -= 3
+                        if life <= 0:
                             exit = show_gameover_screen()
                             game_over = True
                             point = 0
