@@ -293,6 +293,17 @@ while running:
             else :
                 if not freeze: 
                     generate_random_fruit(key)
+            if len(eliminated_fruits) > 0:
+                combo_points = calculate_combo_bonus(len(eliminated_fruits))
+                point += combo_points
+                if len(eliminated_fruits) >= 3:
+                    draw_text(display, f"Combo! +{combo_points}!", 32, DISPLAY_WIDTH / 2, 100)
+                else:
+                    point += 1
+                    value['hit'] = True
+                    value['throw'] = False
+                    generate_random_fruit(key)
+                    score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
 
     pygame.display.flip()#mise a jour de l'image a chaque fin de boucle
     clock.tick(11)
