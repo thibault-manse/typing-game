@@ -6,9 +6,9 @@ import time
 
 pygame.init()
 
-FENETRE_WIDTH, FENETRE_HEIGHT = 846, 476
-fenetre = pygame.display.set_mode((FENETRE_WIDTH, FENETRE_HEIGHT))
-fenetre = pygame.display.set_mode((846, 476))
+DISPLAY_WIDTH, DISPLAY_HEIGHT = 846, 476
+display = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+display = pygame.display.set_mode((846, 476))
 half_boom1 = pygame.image.load("fruit/explosion.png")
 fond = pygame.image.load("dojo.jpg").convert()
 fond_freeze = pygame.image.load("fruit/dojo_ice.jpg").convert()
@@ -21,7 +21,7 @@ life = 3
 glacon_time = 0
 freeze = False
 data = {} #création bibliotheque
-fenetre.blit(fond, (0, 0))#Fond de la fenetre
+display.blit(fond, (0, 0))#Fond de la fenetre
 eliminated_fruits = []
 
 WHITE = (255,255,255)
@@ -32,15 +32,15 @@ COLORS = [(180, 100, 255), (255, 0, 0), (255, 255, 0), (255, 165, 0), (0, 128, 0
 font = pygame.font.SysFont("arialblack", 32) #Police et taille
 score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
 
-def draw_button(fenetre, text, x, y, w, h, color, text_color):
-    pygame.draw.rect(fenetre, color, (x, y, w, h))
+def draw_button(display, text, x, y, w, h, color, text_color):
+    pygame.draw.rect(display, color, (x, y, w, h))
     font = pygame.font.SysFont("arialblack", 32)
     text_surface = font.render(text, True, text_color)
     text_rect = text_surface.get_rect(center=(x + w / 2, y + h / 2))
-    fenetre.blit(text_surface, text_rect)
+    display.blit(text_surface, text_rect)
     return pygame.Rect(x, y, w, h)
 
-def draw_colored_text(fenetre, text, size, x, y, colors):
+def draw_colored_text(display, text, size, x, y, colors):
     font = pygame.font.SysFont("arialblack", size)
     letters = [letter for letter in text if letter != " "]  # Ignorer les espaces
     total_width = sum(font.render(letter, True, colors[i]).get_width() for i, letter in enumerate(letters))
@@ -53,7 +53,7 @@ def draw_colored_text(fenetre, text, size, x, y, colors):
         text_surface = font.render(letter, True, colors[color_index])
         text_rect = text_surface.get_rect()
         text_rect.topleft = (offset_x, y)
-        fenetre.blit(text_surface, text_rect)
+        display.blit(text_surface, text_rect)
         offset_x += text_surface.get_width()
         color_index += 1
 
@@ -82,23 +82,23 @@ for fruits in fruit: #genere un fruit random
 
 font_name = pygame.font.match_font('arialblack.ttf')
 
-def draw_text(fenetre, text, size, x, y):
+def draw_text(display, text, size, x, y):
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, WHITE)
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
-    fenetre.blit(text_surface, text_rect)
+    display.blit(text_surface, text_rect)
 
-def draw_lives(fenetre, x, y, lives, image):
+def draw_lives(display, x, y, lives, image):
     for i in range(lives):
         img = pygame.image.load(image)
         img_rect = img.get_rect()
         img_rect.x = int(x + 100 * i)
         img_rect.y = y
-        fenetre.blit(img, img_rect)
+        display.blit(img, img_rect)
 
-def hide_cross_lives(fenetre, x, y):
-    fenetre.blit(pygame.image.load('fruit/vie.png'), (x, y))
+def hide_cross_lives(display, x, y):
+    display.blit(pygame.image.load('fruit/vie.png'), (x, y))
 
 
     
@@ -111,12 +111,12 @@ def calculate_combo_bonus(combo_length):
 
 
 def show_gameover_screen():
-    fenetre.blit(fond, (0, 0))
-    draw_text(fenetre, "Score : " + str(point), 40, 423, 100)
+    display.blit(fond, (0, 0))
+    draw_text(display, "Score : " + str(point), 40, 423, 100)
     pygame.mixer.music.load('./audio/endgame.mp3')
     pygame.mixer.music.play(-1)
-    replay_button = draw_button(fenetre, "Rejouer", FENETRE_WIDTH / 2 - 100, 200, 200, 50, WHITE, BLACK)
-    return_button = draw_button(fenetre, "Retour", FENETRE_WIDTH / 2 - 100, 300, 200, 50, WHITE, BLACK)
+    replay_button = draw_button(display, "Rejouer", DISPLAY_WIDTH / 2 - 100, 200, 200, 50, WHITE, BLACK)
+    return_button = draw_button(display, "Retour", DISPLAY_WIDTH / 2 - 100, 300, 200, 50, WHITE, BLACK)
     pygame.display.flip()
     
     waiting = True
@@ -135,12 +135,12 @@ def show_gameover_screen():
     pygame.mixer.music.stop()
 
 def main_menu():
-    fenetre.blit(fond, (0, 0))
-    draw_colored_text(fenetre, "FRUIT NINJA", 64, FENETRE_WIDTH / 2, 10, COLORS)
+    display.blit(fond, (0, 0))
+    draw_colored_text(display, "FRUIT NINJA", 64, DISPLAY_WIDTH / 2, 10, COLORS)
     pygame.mixer.music.load('./audio/menu.mp3')
     pygame.mixer.music.play(-1)
-    play_button = draw_button(fenetre, "Jouer", FENETRE_WIDTH / 2 - 100, 150, 200, 50, WHITE, BLACK)
-    quit_button = draw_button(fenetre, "Quitter", FENETRE_WIDTH / 2 - 100, 250, 200, 50, WHITE, BLACK)
+    play_button = draw_button(display, "Jouer", DISPLAY_WIDTH / 2 - 100, 150, 200, 50, WHITE, BLACK)
+    quit_button = draw_button(display, "Quitter", DISPLAY_WIDTH / 2 - 100, 250, 200, 50, WHITE, BLACK)
     pygame.display.flip()
     
 
@@ -206,11 +206,11 @@ while running:
 
     else:
         if not freeze:
-            fenetre.blit(fond, (0, 0))
+            display.blit(fond, (0, 0))
         else :
-            fenetre.blit(fond_freeze, (0, 0))
-        fenetre.blit(score_text, (0, 0))
-        draw_lives(fenetre, 520, 5, life, 'fruit/vie.png')
+            display.blit(fond_freeze, (0, 0))
+        display.blit(score_text, (0, 0))
+        draw_lives(display, 520, 5, life, 'fruit/vie.png')
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -227,8 +227,8 @@ while running:
                     value['t'] += 1
 
                 if value['y'] <= 476:
-                    fenetre.blit(value['img'], (value['x'], value['y']))
-                    draw_text(fenetre, letter, 30, value['x'], value['y'])
+                    display.blit(value['img'], (value['x'], value['y']))
+                    draw_text(display, letter, 30, value['x'], value['y'])
                 else :
                     if value['y'] >= 476 and not value['hit'] and key != 'bombe' and key != 'glacon':
                         life -= 1
@@ -248,8 +248,8 @@ while running:
                         value['speed_y'] = prep_valueY
                         value['speed_x'] = prep_valueX
                         if value['y'] <= 476:
-                            fenetre.blit(value['img'], (value['x'], value['y']))
-                            draw_text(fenetre, letter, 30, value['x'], value['y'])
+                            display.blit(value['img'], (value['x'], value['y']))
+                            draw_text(display, letter, 30, value['x'], value['y'])
                         
                             pygame.display.flip()
 
@@ -258,8 +258,8 @@ while running:
                     if not value['hit'] and tap_letter == value['letter']:
                         if key == 'bombe':
                             life -= 3
-                            fenetre.blit(fond, (0, 0))
-                            fenetre.blit(half_boom1, (value['x'], value['y']))
+                            display.blit(fond, (0, 0))
+                            display.blit(half_boom1, (value['x'], value['y']))
                             pygame.display.update()
                             time.sleep(1)
                             if life <= 0:
@@ -285,7 +285,7 @@ while running:
                         score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
                         
                         value['hit'] = True
-                        fenetre.blit(value['img'], (value['x'], value['y']))
+                        display.blit(value['img'], (value['x'], value['y']))
                         pygame.display.update()
 
             else :
