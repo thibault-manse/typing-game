@@ -2,20 +2,24 @@ import pygame
 import string
 from pygame.locals import *
 import random
-#import time
+import time
 
 pygame.init()
 
 FENETRE_WIDTH, FENETRE_HEIGHT = 846, 476
 fenetre = pygame.display.set_mode((FENETRE_WIDTH, FENETRE_HEIGHT))
 fenetre = pygame.display.set_mode((846, 476))
+half_boom1 = pygame.image.load("fruit/explosion.png")
 fond = pygame.image.load("dojo.jpg").convert()
+fond_freeze = pygame.image.load("fruit/dojo_ice.jpg").convert()
 letter = string.ascii_lowercase
 fruit= ['abricot', 'banane', 'orange', 'pasteque', 'poire', 'bombe', 'glacon']
 clock = pygame.time.Clock() 
 point = 0
 multiplicateur = 1
 life = 3
+glacon_time = 0
+freeze = False
 data = {} #création bibliotheque
 fenetre.blit(fond, (0, 0))#Fond de la fenetre
 eliminated_fruits = []
@@ -185,6 +189,15 @@ while running:
             data.clear()
             pygame.mixer.music.load('./audio/ost.mp3')
             pygame.mixer.music.play(-1)
+            life = 3
+            glacon_time = 0
+            freeze = False
+            new_data = {}
+            for fruits in fruit:  
+                generate_random_fruit(fruits)
+                new_data[fruits] = data[fruits]
+            data.clear()
+            data.update(new_data)
             for fruits in fruit:
                 generate_random_fruit(fruits)
         elif action == 0:
@@ -192,54 +205,93 @@ while running:
             game_over = False
 
     else:
-        fenetre.blit(fond, (0, 0))
-        score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
+        if not freeze:
+            fenetre.blit(fond, (0, 0))
+        else :
+            fenetre.blit(fond_freeze, (0, 0))
         fenetre.blit(score_text, (0, 0))
         draw_lives(fenetre, 520, 5, life, 'fruit/vie.png')
-
-        # Toujours s'assurer qu'il y a assez de fruits actifs
-        for key in fruit:
-            if key not in data or not data[key]['throw']:
-                generate_random_fruit(key)
-
-        for key in list(data.keys()):
-            value = data[key]
-            if value['throw']:
-                value['x'] += value['speed_x']
-                value['y'] += value['speed_y']
-                value['speed_y'] += (1 * value['t'])
-                value['t'] += 1
-
-                if value['y'] <= 476:
-                    fenetre.blit(value['img'], (value['x'], value['y']))
-                    draw_text(fenetre, value['letter'], 30, value['x'], value['y'])
-                else:
-                    if not value['hit'] and key != 'bombe':
-                        life -= 1
-                        if life <= 0:
-                            game_over = True
-                    generate_random_fruit(key)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == KEYUP:
-                tap_letter = event.unicode.lower()
-                for key in list(data.keys()):
-                    value = data[key]
+                    
+        for key, value in data.items():
+            if value['throw']:
+                letter = value['letter']
+
+                if not freeze:
+                    value['x'] += value['speed_x']
+                    value['y'] += value['speed_y']
+                    value['speed_y'] += (1 * value['t'])
+                    value['t'] += 1
+
+                if value['y'] <= 476:
+                    fenetre.blit(value['img'], (value['x'], value['y']))
+                    draw_text(fenetre, letter, 30, value['x'], value['y'])
+                else :
+                    if value['y'] >= 476 and not value['hit'] and key != 'bombe' and key != 'glacon':
+                        life -= 1
+                        if life <= 0:
+                            game_over = True
+                            if exit == 1:
+                                pygame.quit()
+                            score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
+                    if not freeze:
+                        generate_random_fruit(key)
+
+                if freeze == True:
+                    now_time = pygame.time.get_ticks()
+                    timer = now_time - glacon_time
+                    if timer >= 3000:
+                        freeze = False
+                        value['speed_y'] = prep_valueY
+                        value['speed_x'] = prep_valueX
+                        if value['y'] <= 476:
+                            fenetre.blit(value['img'], (value['x'], value['y']))
+                            draw_text(fenetre, letter, 30, value['x'], value['y'])
+                        
+                            pygame.display.flip()
+
+                if event.type == KEYUP:
+                    tap_letter = event.unicode.lower()
                     if not value['hit'] and tap_letter == value['letter']:
                         if key == 'bombe':
                             life -= 3
+                            fenetre.blit(fond, (0, 0))
+                            fenetre.blit(half_boom1, (value['x'], value['y']))
+                            pygame.display.update()
+                            time.sleep(1)
                             if life <= 0:
                                 game_over = True
+                                if exit == 1:
+                                    pygame.quit()
+                                score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
+                        elif key == 'glacon':
+                            freeze = True
+                            glacon_time = pygame.time.get_ticks()
+                            prep_valueY = value['speed_y']
+                            prep_valueX = value['speed_x']
+                            value['speed_y'] = 0
+                            value['speed_x'] = 0
                         else:
+                            half_fruit_path = "fruit/" + key + "_sliced.png"
+                    
+                            value['img'] = pygame.image.load(half_fruit_path)
+                        value['speed_x'] += 15
+
+                        if key != 'bombe' and key != 'glacon':
                             point += 1
-                        value['hit'] = True
-                        value['throw'] = False
-                        generate_random_fruit(key)
                         score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
+                        
+                        value['hit'] = True
+                        fenetre.blit(value['img'], (value['x'], value['y']))
+                        pygame.display.update()
 
-        pygame.display.flip()
-        clock.tick(60)
+            else :
+                if not freeze: 
+                    generate_random_fruit(key)
 
+    pygame.display.flip()#mise a jour de l'image a chaque fin de boucle
+    clock.tick(11)
 pygame.quit()
