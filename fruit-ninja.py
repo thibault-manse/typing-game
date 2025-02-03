@@ -24,6 +24,7 @@ WHITE = (255,255,255)
 BLACK = (0, 0, 0)
 COLORS = [(180, 100, 255), (255, 0, 0), (255, 255, 0), (255, 165, 0), (0, 128, 0), 
           (0, 128, 0), (255, 165, 0), (255, 255, 0), (255, 0, 0), (180, 100, 255)]
+
 font = pygame.font.SysFont("arialblack", 32) #Police et taille
 score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
 
@@ -53,7 +54,7 @@ def draw_colored_text(fenetre, text, size, x, y, colors):
         color_index += 1
 
 def generate_random_fruit(fruit):
-    fruit_patch = "fruit/" + fruit + ".png" 
+    fruit_patch = "fruit/" + fruit + ".png" #tout les fruits mis dans une variable
     letter = string.ascii_lowercase
     data[fruit] = { #Donné des fruits (trajectoire, image...)
         'img': pygame.image.load(fruit_patch),
@@ -113,7 +114,6 @@ def show_gameover_screen():
     replay_button = draw_button(fenetre, "Rejouer", FENETRE_WIDTH / 2 - 100, 200, 200, 50, WHITE, BLACK)
     return_button = draw_button(fenetre, "Retour", FENETRE_WIDTH / 2 - 100, 300, 200, 50, WHITE, BLACK)
     pygame.display.flip()
-
     
     waiting = True
     while waiting:
