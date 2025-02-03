@@ -178,11 +178,10 @@ while continuer :
                 if freeze == True:
                     now_time = pygame.time.get_ticks()
                     timer = now_time - glacon_time
-                    print(timer)
                     if timer >= 3000:
                         freeze = False
-                        fruit['speed_y'] = prep_valueY
-                        fruit['speed_x'] = prep_valueX
+                        value['speed_y'] = prep_valueY
+                        value['speed_x'] = prep_valueX
                         if value['y'] <= 476:
                             fenetre.blit(value['img'], (value['x'], value['y']))
                             draw_text(fenetre, letter, 30, value['x'], value['y'])
@@ -209,11 +208,11 @@ while continuer :
                             freeze = True
                             glacon_time = pygame.time.get_ticks()
 
-                            for fruit in data.values():
-                                prep_valueY = fruit['speed_y']
-                                prep_valueX = fruit['speed_x']
-                                fruit['speed_y'] = 0
-                                fruit['speed_x'] = 0
+                            
+                            prep_valueY = value['speed_y']
+                            prep_valueX = value['speed_x']
+                            value['speed_y'] = 0
+                            value['speed_x'] = 0
                         else:
                             half_fruit_path = "fruit/explosion1.png"
                     
