@@ -10,26 +10,27 @@ DISPLAY_WIDTH, DISPLAY_HEIGHT = 846, 476
 display = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 display = pygame.display.set_mode((846, 476))
 half_boom1 = pygame.image.load("fruit/explosion.png")
-fond = pygame.image.load("dojo.jpg").convert()
-fond_freeze = pygame.image.load("fruit/dojo_ice.jpg").convert()
+background = pygame.image.load("dojo.jpg").convert()
+background_freeze = pygame.image.load("fruit/dojo_ice.jpg").convert()
 letter = string.ascii_lowercase
 fruit= ['abricot', 'banane', 'orange', 'pasteque', 'poire', 'bombe', 'glacon']
-clock = pygame.time.Clock() 
+clock = pygame.time.Clock() #initialisation FPS
 point = 0
-multiplicateur = 1
 life = 3
-glacon_time = 0
+glacon_time = 0 #for time in freeze
 freeze = False
-data = {} #création bibliotheque
-display.blit(fond, (0, 0))#Fond de la fenetre
-eliminated_fruits = []
+data = {} #data for fruits
+display.blit(background, (0, 0))
+eliminated_fruits = [] #for combos and debug
 
 WHITE = (255,255,255)
 BLACK = (0, 0, 0)
 COLORS = [(180, 100, 255), (255, 0, 0), (255, 255, 0), (255, 165, 0), (0, 128, 0), 
-          (0, 128, 0), (255, 165, 0), (255, 255, 0), (255, 0, 0), (180, 100, 255)]
+          (0, 128, 0), (255, 165, 0), (255, 255, 0), (255, 0, 0), (180, 100, 255)]#for title
 
-font = pygame.font.SysFont("arialblack", 32) #Police et taille
+#---------------------------JOSEPH-------------------------------------------
+
+font = pygame.font.SysFont("arialblack", 32)
 score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
 
 def draw_button(display, text, x, y, w, h, color, text_color):
@@ -56,6 +57,8 @@ def draw_colored_text(display, text, size, x, y, colors):
         display.blit(text_surface, text_rect)
         offset_x += text_surface.get_width()
         color_index += 1
+
+#-------------------------------THIBAULT--------------------------------
 
 def generate_random_fruit(fruit):
     fruit_patch = "fruit/" + fruit + ".png" #tout les fruits mis dans une variable
@@ -100,7 +103,7 @@ def draw_lives(display, x, y, lives, image):
 def hide_cross_lives(display, x, y):
     display.blit(pygame.image.load('fruit/vie.png'), (x, y))
 
-
+#-------------------------------JOSEPH----------------------------------
     
 def calculate_combo_bonus(combo_length):
     
@@ -111,7 +114,7 @@ def calculate_combo_bonus(combo_length):
 
 
 def show_gameover_screen():
-    display.blit(fond, (0, 0))
+    display.blit(background, (0, 0))
     draw_text(display, "Score : " + str(point), 40, 423, 100)
     pygame.mixer.music.load('./audio/endgame.mp3')
     pygame.mixer.music.play(-1)
@@ -135,7 +138,7 @@ def show_gameover_screen():
     pygame.mixer.music.stop()
 
 def main_menu():
-    display.blit(fond, (0, 0))
+    display.blit(background, (0, 0))
     draw_colored_text(display, "FRUIT NINJA", 64, DISPLAY_WIDTH / 2, 10, COLORS)
     pygame.mixer.music.load('./audio/menu.mp3')
     pygame.mixer.music.play(-1)
@@ -162,6 +165,7 @@ menu = True
 
 # Boucle principal 
 
+#--------------------------NAEL--------------------------------
 
 while running:
     if menu:
@@ -206,9 +210,9 @@ while running:
 
     else:
         if not freeze:
-            display.blit(fond, (0, 0))
+            display.blit(background, (0, 0))
         else :
-            display.blit(fond_freeze, (0, 0))
+            display.blit(background_freeze, (0, 0))
         display.blit(score_text, (0, 0))
         draw_lives(display, 520, 5, life, 'fruit/vie.png')
 
@@ -260,7 +264,7 @@ while running:
                 if not value['hit'] and letter in keys_pressed:
                     if key == 'bombe':
                         life -= 3
-                        display.blit(fond, (0, 0))
+                        display.blit(background, (0, 0))
                         display.blit(half_boom1, (value['x'], value['y']))
                         pygame.display.update()
                         time.sleep(1)
