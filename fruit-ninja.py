@@ -43,7 +43,7 @@ def draw_button(display, text, x, y, w, h, color, text_color):
 
 def draw_colored_text(display, text, size, x, y, colors):
     font = pygame.font.SysFont("arialblack", size)
-    letters = [letter for letter in text if letter != " "]  # Ignorer les espaces
+    letters = [letter for letter in text if letter != " "]  # Ignore space
     total_width = sum(font.render(letter, True, colors[i]).get_width() for i, letter in enumerate(letters))
     offset_x = x - total_width // 2
     color_index = 0
@@ -61,9 +61,9 @@ def draw_colored_text(display, text, size, x, y, colors):
 #-------------------------------THIBAULT--------------------------------
 
 def generate_random_fruit(fruit):
-    fruit_patch = "fruit/" + fruit + ".png" #tout les fruits mis dans une variable
+    fruit_patch = "fruit/" + fruit + ".png"
     letter = string.ascii_lowercase
-    data[fruit] = { #Donné des fruits (trajectoire, image...)
+    data[fruit] = {
         'img': pygame.image.load(fruit_patch),
         'letter' : random.choice(letter),
         'x' : random.randint(100, 500),
@@ -80,7 +80,7 @@ def generate_random_fruit(fruit):
     else :
         data[fruit]['throw'] = False
 
-for fruits in fruit: #genere un fruit random
+for fruits in fruit:
     generate_random_fruit(fruits)
 
 font_name = pygame.font.match_font('arialblack.ttf')
@@ -162,8 +162,6 @@ def main_menu():
 game_over = False
 running = True
 menu = True
-
-# Boucle principal 
 
 #--------------------------NAEL--------------------------------
 
@@ -309,6 +307,6 @@ while running:
                     generate_random_fruit(key)
                     score_text = font.render('Score : ' + str(point), True, (255, 255, 255))
 
-    pygame.display.flip()#mise a jour de l'image a chaque fin de boucle
+    pygame.display.flip()
     clock.tick(11)
 pygame.quit()
